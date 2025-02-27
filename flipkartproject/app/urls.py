@@ -15,5 +15,11 @@ urlpatterns = [
     path("reset_password/<uname>/", views.reset_password, name="reset_password"),
     path("about/", views.about, name="about"),
     path("contact/", views.contact, name="contact"),
-    
+    path('mobilelist/',views.mobilelist,name='mobilelist'),
+    path('electronicslist/',views.electronicslist,name='electronicslist'),
+    path('shoeslist/',views.shoeslist,name='shoeslist'),
+    path('clothlist/',views.clothlist,name='clothlist'),
+    path('showpricerange/',views.showpricerange,name='showpricerange'),
+    path('sortingbyprice/',views.sortingbyprice,name='sortingbyprice'),
+    path('searchproduct/',views.searchproduct,name='searchproduct'),
 ]
