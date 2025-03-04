@@ -44,7 +44,7 @@ FlipKart | Cart
                             <a href="/updateqty/1/{{x.productid.productid}}"><button class="btn btn-success">+</button></a>
                         </div>
                         <div class="mt-3">
-                            <a class="btn btn-warning" href="/addaddress">Make Payment</a>
+                            <a class="btn btn-success" href="/addaddress">Make Payment</a>
                             <a class="btn btn-primary" href="/removecart/{{ x.productid.productid }}">Remove from Cart</a>
 
                         </div>
@@ -58,10 +58,14 @@ FlipKart | Cart
         <div class="col-md-2">
             <div class="row">
                 <h3 class="btn-danger text-white text-center bg-danger text-white">Total Amount Section</h3>
-                <h5><strong>Total Items:</strong> {{ allcarts|length }}</h5>
+                <h5><strong>Total Items={{totalitems}}</strong> </h5>
                 <hr>
-                <h5><strong>Total Amount: Rs</strong> {{ total_amount }}</h5> <!-- Make sure total_amount is passed to the template -->
-                <a href="/addaddress"><button class="btn btn-danger w-100">Make Payment</button></a>
+                <h5><strong>Total Amount= {{totalamount}}/-</strong> {{ total_amount }}</h5> 
+                {% if totalitems >= 1 %}
+                <a href="/addaddress"><button class="btn btn-success w-100">Make Payment</button></a>
+                {% else %}
+                <a href="#"><button class="btn btn-danger w-100" disabled>Make Payment</button></a>
+                {% endif %}
             </div>
         </div>
     </div>

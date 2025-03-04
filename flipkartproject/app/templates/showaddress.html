@@ -1,28 +1,38 @@
 {% extends 'base.html' %}
-{% block title %} Flipkart|Select Address {% endblock %}
+{% block title %}Flipkart|Select Address{% endblock %}
 {% block body %}
+
 <div class="container">
     <div class="row">
-        <div class="text-center">
-            <form  method="post">
-                {% csrf_token %}
-                <div class="list-group">
-                    {% for x in address %}
-                    <div class="list-group item">
-                        <input type="radio"  id="{{x.id}}">
-                        <label for="x_{{x.id}}">
-                        <strong>Mobile:</strong>{{x.mobile}}<br>
-                        <strong>Address:</strong>{{x.Address}}<br>
-                        <strong>Pincode:</strong>{{x.Pincode}}<br>
-                    </label>
+        <h1 class="text-center">Select Address for Payment</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="list-group">
+                {% for x in address %}
 
-                    </div>
-                    {% empty %}
+                <div class="list-group-item">
+                    <input type="radio" id="x_{{x.id}}">
+                    <label for="x_{{x.id}}">
+                        <strong>Mobile:</strong>{{x.mobile}}<br>
+                        <strong>Address:</strong>{{x.address}}<br>
+                        <strong>Pincode:</strong>{{x.pincode}}<br>
+                    </label>
+                </div>
+                
+                {% empty %}
+                <div class="alert alert-warning">
+                    No saved addresses found!
                 </div>
                 {% endfor %}
 
-            </form>
-        </div>
+            </div>
+
+        </form>
+        <a href="/payment"><input type="submit" class="btn btn-success" value="Proceed to Payment"></a>
+        <a href="/showcarts"><input type="button" class="btn btn-danger" value="Cancel"></a>
+
     </div>
 </div>
+
+
 {% endblock %}
