@@ -376,14 +376,44 @@ def showaddress(req):
     else:
         return redirect ('/signin')
 import razorpay
+import random
+from django.conf import settings
+from django.core.mail import send_mail
 def payment(req):
-    
-    client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
+    if req.user.is_authenticated:
+        try:
+            cartitems=Cart.objects.filter(userid=req.user.id)
+            totalamount=sum(i.productid.price*i.qty for i in cartitems)
+            print(totalamount)
+            userid=req.user
 
-    data = { "amount": 500, "currency": "INR", "receipt": "order_rcptid_11" }
-    payment = client.order.create(data=data) #Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-    return render(req,'payment.html')     
-        
+            client = razorpay.Client(auth=("rzp_test_wH0ggQnd7iT3nB", "eZseshY3oSsz2fcHZkTiSlCm"))
+            data = { "amount": totalamount*100, "currency": "INR", "receipt": "order_rcptid_11" }
+            payment = client.order.create(data=data) # Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            
+            for items in cartitems:
+                orderid=random.randrange(1000,9000000)
+                orderdata=Orders.objects.create(orderid=orderid,productid=items.productid,userid=userid,qty=items.qty)
+                orderdata.save()
+
+                receiptid=random.randrange(10000000,80000000)
+                paymentdata=Payment.objects.create(receiptid=receiptid,orderid=orderdata,userid=userid,totalprice=totalamount)
+                paymentdata.save()
+            print(orderid,receiptid)
+            cartitems.delete()
+            subject=f"FlipcartClone Payment Status for your order={orderid}"
+            msg=f"Hi {userid},Thank you using my services\n Total Amount Paid by you is {totalamount}"
+            emailfrom=settings.EMAIL_HOST_USER
+            receiver=[userid]
+            send_mail(subject,msg,emailfrom,receiver)
+            
+            context={"data":payment,"amount":totalamount}
+
+        except:
+            context={}    
+            context["error"]="An error occured while creating payment. Please try again!"
+    
+    return render(req,'payment.html',context)
 
 
 
